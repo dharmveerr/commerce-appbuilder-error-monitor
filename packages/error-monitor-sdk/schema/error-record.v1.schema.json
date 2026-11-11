@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/commerce-error-record/v1.json",
+  "title": "Commerce Error Monitor - ErrorRecord v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "fingerprint", "timestamp", "receivedAt", "commerceInstanceId", "severity", "source", "error", "context", "redactions"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "id": { "type": "string", "pattern": "^\\d{17}-[0-9a-f]{8}$", "description": "Server-generated, time-sortable (UTC yyyymmddHHMMssSSS-random8)." },
+    "fingerprint": { "type": "string", "pattern": "^[0-9a-f]{32}$", "description": "Groups equivalent errors; volatile numbers/uuids masked before hashing." },
+    "timestamp": { "type": "string", "format": "date-time", "description": "When the error occurred (client clock, clamped to server time +/- bounds)." },
+    "receivedAt": { "type": "string", "format": "date-time" },
+    "commerceInstanceId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$", "description": "Set by the server from configuration; never accepted from callers." },
+    "severity": { "enum": ["debug", "info", "warning", "error", "critical"] },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["app"],
+      "properties": {
+        "app": { "type": "string", "maxLength": 100 },
+        "action": { "type": "string", "maxLength": 100 },
+        "version": { "type": "string", "maxLength": 70 },
+        "environment": { "type": "string", "maxLength": 70 }
+      }
+    },
+    "error": {
+      "type": "object", "additionalProperties": false, "required": ["name", "message"],
+      "properties": {
+        "name": { "type": "string", "maxLength": 120 },
+        "code": { "type": "string", "maxLength": 120 },
+        "message": { "type": "string", "maxLength": 1020 },
+        "stack": { "type": "string", "maxLength": 4020 }
+      }
+    },
+    "context": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "requestId": { "type": "string" },
+        "activationId": { "type": "string" },
+        "http": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "method": { "type": "string" },
+            "path": { "type": "string", "description": "Query string and fragment are never stored." },
+            "status": { "type": "integer", "minimum": 100, "maximum": 599 }
+          }
+        },
+        "tags": { "type": "object", "maxProperties": 20, "additionalProperties": { "type": ["string", "number", "boolean"] } }
+      }
+    },
+    "redactions": { "type": "integer", "minimum": 0, "description": "Number of masked OCCURRENCES (client + server). A value repeated in message and stack counts twice." }
+  }
+}

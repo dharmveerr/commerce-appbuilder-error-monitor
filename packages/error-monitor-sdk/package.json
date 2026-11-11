@@ -1,0 +1,16 @@
+{
+  "name": "@commerce-ext/error-monitor-sdk",
+  "version": "0.1.0",
+  "description": "Record sanitized error records from Adobe App Builder actions to the Commerce Error Monitor.",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./sanitize": "./src/sanitize.js",
+    "./schema.json": "./schema/error-record.v1.schema.json"
+  },
+  "files": ["src", "schema", "README.md"],
+  "engines": { "node": ">=18" },
+  "scripts": { "test": "node --test test/*.test.js" },
+  "dependencies": {},
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "commerce-error-monitor-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "App Builder app: error ingestion runtime actions + Commerce Admin dashboard.",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "deploy": "aio app deploy",
+    "dev": "aio app dev"
+  },
+  "dependencies": {
+    "@commerce-ext/error-monitor-sdk": "0.1.0",
+    "@adobe/aio-lib-state": "^4.0.0",
+    "@adobe/aio-lib-files": "^4.0.0",
+    "@adobe/aio-lib-events": "^4.0.0",
+    "@adobe/react-spectrum": "^3.34.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0",
+    "@adobe/uix-core": "1.0.3",
+    "@adobe/uix-guest": "1.0.3"
+  },
+  "devDependencies": {
+    "@adobe/aio-cli-plugin-app": "^14.0.0"
+  },
+  "license": "UNLICENSED"
+}

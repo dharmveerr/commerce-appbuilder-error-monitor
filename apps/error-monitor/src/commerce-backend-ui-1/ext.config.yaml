@@ -1,0 +1,65 @@
+operations:
+  view:
+    - type: web
+      impl: index.html
+actions: actions
+web: web-src
+runtimeManifest:
+  packages:
+    error-monitor:
+      license: UNLICENSED
+      actions:
+        registration:
+          function: actions/registration/index.js
+          web: 'yes'
+          runtime: nodejs:20
+          annotations:
+            require-adobe-auth: true
+            final: true
+        record-error:
+          function: actions/record-error/index.js
+          web: 'yes'
+          runtime: nodejs:20
+          # raw-http: HMAC is computed over the exact request bytes. Auth is the HMAC, not IMS (callers are machines).
+          annotations:
+            require-adobe-auth: false
+            raw-http: true
+            final: true
+          limits:
+            timeout: 30000
+            memorySize: 256
+          inputs:
+            COMMERCE_INSTANCE_ID: $COMMERCE_INSTANCE_ID
+            INGEST_SIGNING_KEY: $INGEST_SIGNING_KEY
+            STATE_TTL_SECONDS: $STATE_TTL_SECONDS
+            ARCHIVE_ENABLED: $ARCHIVE_ENABLED
+            EVENTS_ENABLED: $EVENTS_ENABLED
+            EVENT_PROVIDER_ID: $EVENT_PROVIDER_ID
+            EVENT_CODE: $EVENT_CODE
+            EVENT_MIN_SEVERITY: $EVENT_MIN_SEVERITY
+            IMS_ORG_ID: $IMS_ORG_ID
+            IMS_CLIENT_ID: $IMS_CLIENT_ID
+            IMS_CLIENT_SECRET: $IMS_CLIENT_SECRET
+            IMS_SCOPES: $IMS_SCOPES
+        list-errors:
+          function: actions/list-errors/index.js
+          web: 'yes'
+          runtime: nodejs:20
+          annotations:
+            require-adobe-auth: true
+            final: true
+          inputs:
+            COMMERCE_INSTANCE_ID: $COMMERCE_INSTANCE_ID
+            IMS_ORG_ID: $IMS_ORG_ID
+            ARCHIVE_ENABLED: $ARCHIVE_ENABLED
+        get-error:
+          function: actions/get-error/index.js
+          web: 'yes'
+          runtime: nodejs:20
+          annotations:
+            require-adobe-auth: true
+            final: true
+          inputs:
+            COMMERCE_INSTANCE_ID: $COMMERCE_INSTANCE_ID
+            IMS_ORG_ID: $IMS_ORG_ID
+            ARCHIVE_ENABLED: $ARCHIVE_ENABLED
