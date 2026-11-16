@@ -10,12 +10,12 @@
 
 | Area | Result |
 |---|---|
-| Automated tests (`npm test`) | **81 of 81 passed** |
+| Automated tests (`npm test`) | **83 of 83 passed** |
 | Clean-clone build (`npm ci`, `aio app build` for both apps) | **Passed** |
 | Built action bundles exercised locally | **Passed** |
 | Source-control hygiene (`.gitignore`) | **Passed** |
 | Deployed to a non-production App Builder workspace; end-to-end check `npm run smoke` | **Passed** (section 5) |
-| Commerce Admin installation and dashboard check | **Passed** (section 5.3) |
+| Commerce Admin installation and dashboard check | **Passed** (section 5.3, screenshots in section 6) |
 
 ## 2. Automated tests
 
@@ -25,8 +25,8 @@ The suite uses Node.js's built-in test runner. Adobe I/O State, Files and Events
 |---|---|---|---|
 | SDK (`packages/error-monitor-sdk`) | 32 | 32 | 0 |
 | Error Monitor app (`apps/error-monitor`) | 43 | 43 | 0 |
-| Sample app (`apps/sample-consumer`) | 6 | 6 | 0 |
-| **Total** | **81** | **81** | **0** |
+| Sample app (`apps/sample-consumer`) | 8 | 8 | 0 |
+| **Total** | **83** | **83** | **0** |
 
 **Test effectiveness check.** With all masking rules disabled in a scratch copy, 16 of the tests fail, including every sensitive-data test. This confirms that the sensitive-data tests detect a masking failure.
 
@@ -94,3 +94,37 @@ Error Monitor deployed to a non-production App Builder **Stage** workspace; the 
 | App associated and installed through App Management | Setup guide, section 5 | PASS (Installed, version 0.1.0) | 2026-11-15 | D. Rawat |
 | Dashboard opens under **System → Error Monitor** and lists, filters and shows details | Demo guide, step 7 | PASS (list, severity chips, application filter, masked values) | 2026-11-15 | D. Rawat |
 | Dashboard data actions reject a token from another Adobe organization | Call `list-errors` with such a token | | | |
+
+## 6. Screenshot evidence
+
+These screenshots were taken in the Commerce sandbox. They support the results recorded above.
+
+### 6.1 App installed in App Management
+
+**Error Monitor** shows **Installed**, version **0.1.0**, with the **Admin UI** capability.
+
+![Error Monitor installed in App Management](screenshots/app-management-installed.png)
+
+### 6.2 Menu entry in the Commerce Admin
+
+The app adds **Error Monitor** under **System** in the Commerce Admin menu.
+
+![Error Monitor entry under the System menu](screenshots/admin-menu-error-monitor.png)
+
+### 6.3 Dashboard: recent errors
+
+The dashboard lists recent errors, newest first, with a count per severity. It shows errors from the sample app (`orders-sync`, `validate-cart`) and from the deployment checks. The token in the `validate-cart` message is shown as `[REDACTED]`.
+
+![Dashboard listing recent errors with severity counts](screenshots/dashboard-recent-errors.png)
+
+### 6.4 Dashboard: masked sensitive values
+
+Three errors reported by the sample app `orders-sync` action:
+
+| Error | What it shows |
+|---|---|
+| `ErrorResponse (503)` | A returned server error is recorded, not only thrown errors |
+| `Error` | The email and the bearer token are masked: `[REDACTED_EMAIL]`, `Bearer [REDACTED]` |
+| `RangeError` | A normal thrown error |
+
+![Dashboard showing errors with masked email and token](screenshots/dashboard-masked-errors.png)

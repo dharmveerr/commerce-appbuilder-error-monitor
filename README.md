@@ -17,6 +17,24 @@ Built for **Adobe Commerce as a Cloud Service (ACCS)**, including sandbox instan
 | **Admin dashboard** | **System → Error Monitor** in Commerce Admin: list, filter by severity and application, browse the archive by day, and open full error details. |
 | **Fail-safe reporting** | Reporting never breaks the calling action. It has a short timeout, no retries and per-error throttling. |
 
+## How it looks
+
+**1. Installed in Commerce** (Apps → App Management)
+
+![Error Monitor installed in App Management](docs/screenshots/app-management-installed.png)
+
+**2. Menu entry** (System → Error Monitor)
+
+![Error Monitor entry under the System menu](docs/screenshots/admin-menu-error-monitor.png)
+
+**3. Dashboard with recent errors and severity counts**
+
+![Dashboard listing recent errors](docs/screenshots/dashboard-recent-errors.png)
+
+**4. Sensitive values masked** (email and bearer token)
+
+![Dashboard showing masked email and token](docs/screenshots/dashboard-masked-errors.png)
+
 ## Architecture
 
 ```mermaid

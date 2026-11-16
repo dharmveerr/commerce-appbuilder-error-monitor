@@ -11,6 +11,12 @@ A guided demonstration of the Error Monitor, about 15 minutes. Each step lists t
 - Optional: an Events journal registration is open in Developer Console.
 - **Warm-up, 5 minutes before the demo:** run step 3 once. The first call after a period of inactivity starts the actions and takes a few seconds; later calls respond in about a second.
 
+The Error Monitor must show **Installed** in **Apps → App Management**, and **Error Monitor** must appear under **System**:
+
+![Error Monitor installed in App Management](screenshots/app-management-installed.png)
+
+![Error Monitor entry under the System menu](screenshots/admin-menu-error-monitor.png)
+
 **How to invoke the sample action.** Invoke it without waiting for the result, then read the result of the last activation:
 
 ```bash
@@ -67,6 +73,10 @@ aio runtime activation result --last
 
 **Expected:** the action returns its own `503` response unchanged. The dashboard shows an `ErrorResponse (503)` entry with the message `Action returned HTTP 503: Order service is unavailable`.
 
+After steps 3–5, the dashboard looks like this (newest first): the `503` response, the masked email and token, and the `RangeError`.
+
+![Dashboard after steps 3 to 5](screenshots/dashboard-masked-errors.png)
+
 ## 6. Commerce webhook behaviour
 
 `validate-cart` is a Commerce webhook example protected by Adobe IMS. Call it with your own IMS token (replace the URL with the one shown by `aio app get-url`):
@@ -93,6 +103,8 @@ call '{"simulate":"fail"}'                # unexpected error
 All three responses use HTTP 200, as Commerce webhooks require.
 
 ## 7. Dashboard features
+
+![Dashboard with severity chips and recent errors](screenshots/dashboard-recent-errors.png)
 
 1. **Severity chips:** select a chip to filter the list; select it again to clear the filter. The counts reflect the loaded list.
 2. **Application filter:** type `sample-consumer` (or paste an *Application* cell such as `sample-consumer / orders-sync`) and select **Refresh**.
