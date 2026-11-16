@@ -1,0 +1,26 @@
+{
+  "name": "commerce-appbuilder-error-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reusable Error Monitor for Adobe Commerce App Builder applications (monorepo).",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"packages/*/test/*.test.js\" \"apps/*/test/*.test.js\"",
+    "test:verbose": "node --test --test-reporter=spec \"packages/*/test/*.test.js\" \"apps/*/test/*.test.js\"",
+    "smoke": "node scripts/smoke-test.js",
+    "commerce-flow": "node scripts/commerce-flow.js"
+  },
+  "license": "UNLICENSED",
+  "overrides": {
+    "@types/node": "^24.12.0"
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
+  }
+}

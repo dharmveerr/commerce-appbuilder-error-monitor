@@ -1,0 +1,9 @@
+# Admin UI SDK V2. `npx @adobe/aio-commerce-lib-app init` adds any further extension
+# references it needs (and install.yaml); it is idempotent and preserves this entry.
+extensions:
+  commerce/backend-ui/2:
+    $include: src/commerce-backend-ui-2/ext.config.yaml
+
+  # This extension is required for app management. Do not remove.
+  commerce/extensibility/1:
+    $include: src/commerce-extensibility-1/ext.config.yaml

@@ -1,0 +1,24 @@
+{
+  "name": "error-monitor-sample",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sample app that reports webhook and event-handler errors to the Error Monitor.",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "typecheck:actions": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "npm run typecheck:actions",
+    "postinstall": "npx aio-commerce-lib-app hooks postinstall"
+  },
+  "dependencies": {
+    "@adobe/aio-commerce-lib-app": "^2.2.0",
+    "@adobe/aio-commerce-sdk": "^2.1.0",
+    "@commerce-ext/error-monitor-sdk": "0.1.0"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@tsconfig/bases": "^1.0.30"
+  },
+  "imports": {
+    "#app.commerce.config": "./src/commerce-extensibility-1/.generated/app.commerce.config.js"
+  }
+}
