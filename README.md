@@ -119,9 +119,14 @@ Use `withWebhookErrorMonitor` for Commerce webhooks. It always answers Commerce 
 
 - **Reporting** is authenticated with an HMAC-SHA256 signature and a 5-minute timestamp window.
 - **Dashboard data actions** require a valid Adobe IMS token (`require-adobe-auth`). The page receives the administrator's token from the Commerce Admin only.
-- **Sensitive values** are masked at three points: in the reporting app, in the monitor before storage, and again before display. Masking is pattern-based, so application code should still avoid putting secrets in error messages.
-- **Access scope:** in this release, any Commerce administrator who can use Admin UI SDK apps can open the dashboard, and any valid Adobe sign-in from the configured organization can call the data actions. Role-based restrictions are planned for a later release (see [docs/solution-design.md](docs/solution-design.md#7-current-scope-and-roadmap)).
+- **Sensitive values** are masked at three points: in the reporting app, in the monitor before storage, and again before display.
 - **No secrets in source control:** `.env` files are excluded by `.gitignore`.
+
+## Known limitations
+
+- **Dashboard access:** every Commerce administrator who can use Admin UI SDK apps can open the dashboard. There is no separate role for it yet.
+- **Archive retention:** recent errors expire automatically (default 7 days). Archived copies in I/O Files are kept until they are removed.
+
 
 ## Documentation
 
