@@ -116,15 +116,3 @@ The app adds **Error Monitor** under **System** in the Commerce Admin menu.
 The dashboard lists recent errors, newest first, with a count per severity. It shows errors from the sample app (`orders-sync`, `validate-cart`) and from the deployment checks. The token in the `validate-cart` message is shown as `[REDACTED]`.
 
 ![Dashboard listing recent errors with severity counts](screenshots/dashboard-recent-errors.png)
-
-### 6.4 Dashboard: masked sensitive values
-
-Three errors reported by the sample app `orders-sync` action:
-
-| Error | What it shows |
-|---|---|
-| `ErrorResponse (503)` | A returned server error is recorded, not only thrown errors |
-| `Error` | The email and the bearer token are masked: `[REDACTED_EMAIL]`, `Bearer [REDACTED]` |
-| `RangeError` | A normal thrown error |
-
-![Dashboard showing errors with masked email and token](screenshots/dashboard-masked-errors.png)

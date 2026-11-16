@@ -73,10 +73,6 @@ aio runtime activation result --last
 
 **Expected:** the action returns its own `503` response unchanged. The dashboard shows an `ErrorResponse (503)` entry with the message `Action returned HTTP 503: Order service is unavailable`.
 
-After steps 3–5, the dashboard looks like this (newest first): the `503` response, the masked email and token, and the `RangeError`.
-
-![Dashboard after steps 3 to 5](screenshots/dashboard-masked-errors.png)
-
 ## 6. Commerce webhook behaviour
 
 `validate-cart` is a Commerce webhook example protected by Adobe IMS. Call it with your own IMS token (replace the URL with the one shown by `aio app get-url`):

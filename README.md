@@ -31,10 +31,6 @@ Built for **Adobe Commerce as a Cloud Service (ACCS)**, including sandbox instan
 
 ![Dashboard listing recent errors](docs/screenshots/dashboard-recent-errors.png)
 
-**4. Sensitive values masked** (email and bearer token)
-
-![Dashboard showing masked email and token](docs/screenshots/dashboard-masked-errors.png)
-
 ## Architecture
 
 ```mermaid
