@@ -39,7 +39,7 @@ export default defineConfig({
         },
         events: [
           {
-            name: 'observer.sales_order_place_after',
+            name: 'plugin.sales.api.order_management.place',
             label: 'Order placed',
             description: 'Sends each placed order to the sample order sync.',
             fields: [{ name: '*' }],

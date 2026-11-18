@@ -104,7 +104,7 @@ sequenceDiagram
 ### 6.3 Event handler failure (order placed)
 
 1. The order is placed. Checkout is not affected.
-2. Adobe I/O Events delivers `observer.sales_order_place_after` to the app's event handler.
+2. Adobe I/O Events delivers `plugin.sales.api.order_management.place` to the app's event handler.
 3. The handler fails (for example, the ERP rejects the order). The SDK records the error, with tokens masked.
 4. The error appears on the dashboard.
 

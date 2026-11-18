@@ -266,7 +266,7 @@ Pure functions, tested without a browser: `buildQuery`, `parseAppFilter`, `parse
 |---|---|
 | App ID | `error-monitor-sample` |
 | Webhook | `observer.sales_quote_add_item` (before) → `sample-consumer/validate-cart`; fields `sku`, `qty`, `quote_id` from `data.quote_item`; timeout 5,000 ms, soft timeout 3,000 ms, not required |
-| Event | `observer.sales_order_place_after` → `sample-consumer/order-placed`, all fields |
+| Event | `plugin.sales.api.order_management.place` → `sample-consumer/order-placed`, all fields |
 | `validate-cart` | `withWebhookErrorMonitor`, `onError: 'exception'`, `timeoutMs: 3000`. A SKU in `FAIL_ADD_TO_CART_SKUS` simulates an inventory failure. More than 50 units is a normal business rejection. |
 | `order-placed` | `withErrorMonitor`. A SKU in `FAIL_ORDER_SYNC_SKUS` simulates an ERP failure that contains a bearer token (masked when stored). |
 | `orders-sync` | Non-web demo action with modes `ok`, `fail`, `leak`, `unavailable` |

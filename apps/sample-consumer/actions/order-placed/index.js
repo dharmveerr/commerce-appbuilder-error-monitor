@@ -4,7 +4,7 @@ const { withErrorMonitor } = require('@commerce-ext/error-monitor-sdk');
 const skuList = (value) => String(value || '').split(',').map((s) => s.trim()).filter(Boolean);
 
 /**
- * Commerce event handler for `observer.sales_order_place_after` (delivered by Adobe I/O Events).
+ * Commerce event handler for `plugin.sales.api.order_management.place` (delivered by Adobe I/O Events).
  * Simulates sending the order to an ERP. For demos, an order containing a SKU listed in FAIL_ORDER_SYNC_SKUS
  * makes the ERP call fail; the error is recorded in the Error Monitor and the event delivery is marked failed.
  */
