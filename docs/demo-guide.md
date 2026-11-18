@@ -9,7 +9,6 @@ A guided demonstration of the Error Monitor, about 15 minutes. Each step lists t
 - You are signed in with `aio login` and the CLI points at the **sample app's** workspace (run the commands from `apps/sample-consumer`).
 - Commerce Admin is open on **System → Error Monitor**.
 - Optional: the Error Monitor Journal is open in Developer Console (see step 8).
-- **Warm-up, 5 minutes before the demo:** run step 3 once. The first call after a period of inactivity starts the actions and takes a few seconds; later calls respond in about a second.
 
 The Error Monitor must show **Installed** in **Apps → App Management**, and **Error Monitor** must appear under **System**:
 
@@ -17,12 +16,25 @@ The Error Monitor must show **Installed** in **Apps → App Management**, and **
 
 ![Error Monitor entry under the System menu](screenshots/admin-menu-error-monitor.png)
 
-**How to invoke the sample action.** Invoke it without waiting for the result, then read the result of the last activation:
+**How to invoke the sample action.** Invoke it without waiting for the result. The command prints an `activationId`; use it to read the result of exactly that call:
 
 ```bash
 aio runtime action invoke sample-consumer/orders-sync --param simulate <mode>
-aio runtime activation result --last
+aio runtime activation result <activationId>
 ```
+
+Available values for `<mode>`:
+
+| Mode | What happens | Recorded severity |
+|---|---|---|
+| `ok` | The call succeeds | Not recorded |
+| `fail` | An unexpected error is thrown | error |
+| `leak` | An error whose message contains an email address and a token (masking demo); add `--param customerEmail <address>` | error |
+| `unavailable` | The action returns its own `503` response | error |
+| `warning` | The call succeeds and a warning is recorded | warning |
+| `critical` | The call succeeds and a critical finding is recorded | critical |
+
+In all steps below, `<activationId>` is the id printed by the invoke command just before. Do not use `--last`: it can show an older call.
 
 Do not use `--result` / `--blocking` for the failing modes: when an action ends with an error, the CLI retries a blocking call, so one demo step would record the same error up to three times.
 
@@ -40,7 +52,7 @@ Open [`apps/sample-consumer/actions/orders-sync/index.js`](../apps/sample-consum
 
 ```bash
 aio runtime action invoke sample-consumer/orders-sync --param simulate ok
-aio runtime activation result --last
+aio runtime activation result <activationId>
 ```
 
 **Expected:** `{ "statusCode": 200, "body": { "synced": 3 } }`. After **Refresh**, the dashboard shows no new entry.
@@ -49,7 +61,7 @@ aio runtime activation result --last
 
 ```bash
 aio runtime action invoke sample-consumer/orders-sync --param simulate fail
-aio runtime activation result --last
+aio runtime activation result <activationId>
 ```
 
 **Expected:** a generic `500` with `"error": "Internal Server Error"` and an `errorId`. After **Refresh**, a `RangeError` from `sample-consumer / orders-sync` appears at the top of the list. Open it: its **Record ID** equals the `errorId`.
@@ -59,7 +71,7 @@ aio runtime activation result --last
 ```bash
 aio runtime action invoke sample-consumer/orders-sync \
   --param simulate leak --param customerEmail jane.doe@example.com
-aio runtime activation result --last
+aio runtime activation result <activationId>
 ```
 
 **Expected:** the new entry's message reads `Upstream rejected request for [REDACTED_EMAIL]: Authorization: Bearer [REDACTED]`. The detail view shows **Hidden values** with the number of masked values. Neither the email address nor the token is stored or displayed.
@@ -68,7 +80,7 @@ aio runtime activation result --last
 
 ```bash
 aio runtime action invoke sample-consumer/orders-sync --param simulate unavailable
-aio runtime activation result --last
+aio runtime activation result <activationId>
 ```
 
 **Expected:** the action returns its own `503` response unchanged. The dashboard shows an `ErrorResponse (503)` entry with the message `Action returned HTTP 503: Order service is unavailable`.
@@ -77,8 +89,10 @@ aio runtime activation result --last
 
 ```bash
 aio runtime action invoke sample-consumer/orders-sync --param simulate warning
+aio runtime activation result <activationId>
+
 aio runtime action invoke sample-consumer/orders-sync --param simulate critical
-aio runtime activation result --last
+aio runtime activation result <activationId>
 ```
 
 **Expected:** each call returns `statusCode 200` with `recordedSeverity` and an `errorId`. After **Refresh**, the dashboard lists both entries and the **Warning** and **Critical** chips show their counts. Select a chip to filter the list.

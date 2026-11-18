@@ -151,7 +151,7 @@ The sample app shows the SDK in an app that is separate from the Error Monitor. 
    ```bash
    aio runtime action invoke sample-consumer/orders-sync \
      --param simulate leak --param customerEmail test@example.com
-   aio runtime activation result --last
+   aio runtime activation result <activationId>
    ```
    The action replies with a generic `500` error and an `errorId`. (Avoid `--result` for failing calls: the CLI retries blocking calls that end in an error, which records the same error more than once.)
 5. In Commerce Admin, select **Refresh** on the Error Monitor page. The error appears, and the email address and token are shown as `[REDACTED_EMAIL]` and `[REDACTED]`.
