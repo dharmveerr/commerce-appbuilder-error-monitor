@@ -270,6 +270,55 @@ A sample event has `"data": {}` (empty), unless you edit it. An event from the E
 
 From the repository root, run `npm run smoke` as described in the setup guide, section 7. Each acceptance check prints `PASS`.
 
+## 10. Real storefront flow (cart and order through Commerce)
+
+Steps 2–6 call the sample actions directly. This step shows the same errors caused by a real shopper: products are added to a cart and an order is placed through the Commerce GraphQL API.
+
+### 10.1 Setup (once)
+
+1. Deploy the sample app: `aio app deploy` from `apps/sample-consumer`.
+2. In Commerce Admin, open **Apps → App Management** and install **Error Monitor Sample**.
+3. Open **System → Webhooks** and check that a hook with batch name `error_monitor_sample` is listed.
+4. If another app already registers a cart webhook on `observer.sales_quote_add_item`, disable that app's hook while demonstrating, so only one cart message is shown.
+
+The sample app reacts to two demo products only. Every other product is left alone.
+
+| Product (SKU) | Role in the demo | What happens |
+|---|---|---|
+| `ACM-3030` | Normal product | Added to the cart. Nothing is recorded. |
+| `AGV-3939` | Cart failure | The cart webhook fails. The shopper sees *"We could not check your cart right now. Please try again. (reference \<id\>)"* and the error is recorded. |
+| `BPG-5005` | Order failure | The order is placed successfully. The background order sync then fails and the error is recorded. |
+
+The SKUs are set in `apps/sample-consumer/.env` (`FAIL_ADD_TO_CART_SKUS`, `FAIL_ORDER_SYNC_SKUS`).
+
+### 10.2 Run the flow
+
+From the repository root:
+
+```bash
+COMMERCE_GRAPHQL_ENDPOINT=https://<host>/<tenant>/graphql npm run commerce-flow
+```
+
+To run only one part, add `cart` or `order`: `npm run commerce-flow -- cart`.
+
+**Expected output:**
+
+```
+Guest cart created
+PASS  add ACM-3030 (normal product)
+PASS  add AGV-3939 (webhook failure) -> shopper sees: "We could not check your cart right now. Please try again. (reference <id>)"
+PASS  add BPG-5005 (order-sync failure trigger)
+PASS  order <number> placed (...). The order event is delivered asynchronously; check the dashboard in ~30 s.
+```
+
+### 10.3 Check the result
+
+1. **Cart failure.** In **System → Error Monitor**, select **Refresh**. A `sample-consumer / validate-cart` entry is at the top. Its **Record ID** equals the `<id>` in the shopper message.
+2. **Order failure.** The order was placed successfully; the shopper sees nothing wrong. After about 30 seconds, select **Refresh** again. A `sample-consumer / order-placed` entry shows `ERP rejected order <number>`, with the token masked.
+3. **Notifications.** Both errors are also in the Error Monitor Journal (step 8.5).
+
+The order failure is the key point of the demo: the order sync runs in the background after the order is saved, so the shopper never sees it. Without the Error Monitor, nobody would know that the order was not synced.
+
 ---
 
 ## Summary of what was shown
@@ -283,3 +332,4 @@ From the repository root, run `npm run smoke` as described in the setup guide, s
 | Dashboard details, empty and invalid results handled | Step 7 |
 | Warning and critical entries shown and filtered | Step 5 (warning and critical), step 7 |
 | Sensitive values not exposed | Steps 4 and 6 |
+| Real shopper cart and order through Commerce | Step 10 |

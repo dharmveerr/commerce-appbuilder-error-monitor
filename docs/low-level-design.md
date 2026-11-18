@@ -45,7 +45,7 @@ scripts/commerce-flow.js             Real storefront flow through Commerce Graph
 | `endpoint` | – | Must be `https` (plain `http` only for localhost with `allowInsecureLocalhost`) |
 | `signingKey` | – | Shared HMAC key, at least 32 characters |
 | `source` | – | `{ app, action?, version?, environment? }` |
-| `timeoutMs` | `2000` | Request is aborted after this time |
+| `timeoutMs` | `3000` | Request is aborted after this time |
 | `throttle` | `{ maxPerWindow: 5, windowMs: 60000 }` | Per fingerprint, per warm container. At most 500 keys are tracked. |
 | `fetchImpl` | global `fetch` | Injectable for tests |
 | `onTransportError` | no-op | Local logging hook |

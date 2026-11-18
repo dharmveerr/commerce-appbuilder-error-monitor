@@ -324,7 +324,9 @@ Make an action fail with a temporary test parameter, invoke it, then select **Re
 
 **Can my app be in a different App Builder project or workspace than the Error Monitor?** Yes. It only needs the `record-error` URL and the signing key. Keep both projects in the same Adobe organization.
 
-**Does reporting slow my actions down?** Only when an error is reported: at most 2 seconds by default, or `timeoutMs` for webhooks. Successful calls are not affected.
+**Does reporting slow my actions down?** Only when an error is reported: at most 3 seconds by default (1 second for webhooks), or the `timeoutMs` you set. Successful calls are not affected.
+
+**Which `timeoutMs` should I use?** For event handlers and background actions, `timeoutMs: 5000`: no shopper is waiting, and it allows for a cold start of the Error Monitor. For webhooks, keep it below the webhook's timeout in Commerce. If reporting takes longer, your action continues without an `errorId`; the error is usually still saved, but this is not guaranteed.
 
 **What if the Error Monitor is unavailable?** The action behaves as it did before the wrapper was added; the report is skipped.
 

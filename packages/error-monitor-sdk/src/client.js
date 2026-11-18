@@ -23,7 +23,7 @@ function validateEndpoint(endpoint, allowInsecureLocalhost) {
  * @param {string} options.endpoint        https URL of the record-error web action
  * @param {string} options.signingKey      shared HMAC key (secret; supply via action inputs, never source)
  * @param {{app:string, action?:string, version?:string, environment?:string}} options.source
- * @param {number} [options.timeoutMs=2000]
+ * @param {number} [options.timeoutMs=3000]
  * @param {{maxPerWindow:number, windowMs:number}} [options.throttle]  per-fingerprint client-side limit
  * @param {Function} [options.fetchImpl]   defaults to global fetch
  * @param {(e:Error)=>void} [options.onTransportError]  hook for local logging (do not log secrets)
@@ -31,7 +31,7 @@ function validateEndpoint(endpoint, allowInsecureLocalhost) {
 function createErrorMonitor(options = {}) {
   const {
     endpoint, signingKey, source,
-    timeoutMs = 2000,
+    timeoutMs = 3000,
     throttle = { maxPerWindow: 5, windowMs: 60000 },
     fetchImpl = globalThis.fetch,
     onTransportError = () => {},
@@ -146,7 +146,7 @@ function responseError(res, status) {
  * `errorResponse` pattern) are recorded too and returned unchanged; disable with `recordErrorResponses: false`.
  *
  * @param {Function} handler  async (params) => response
- * @param {{source:object, recordErrorResponses?:boolean, resolveOptions?:(params)=>object, fetchImpl?:Function, onTransportError?:Function}} opts
+ * @param {{source:object, recordErrorResponses?:boolean, timeoutMs?:number, resolveOptions?:(params)=>object, fetchImpl?:Function, onTransportError?:Function}} opts
  */
 function withErrorMonitor(handler, opts = {}) {
   const recordErrorResponses = opts.recordErrorResponses !== false;
@@ -155,14 +155,14 @@ function withErrorMonitor(handler, opts = {}) {
     try {
       res = await handler(params);
     } catch (err) {
-      const result = await safeRecord(opts, params, err, { context: requestContext(params) });
+      const result = await safeRecord(opts, params, err, { context: requestContext(params) }, opts.timeoutMs);
       return { error: { statusCode: 500, body: { error: 'Internal Server Error', errorId: result.id } } };
     }
     const status = recordErrorResponses ? serverErrorStatus(res) : 0;
     if (status) {
       const context = requestContext(params);
       context.http = { ...(context.http || {}), status };
-      await safeRecord(opts, params, responseError(res, status), { context });
+      await safeRecord(opts, params, responseError(res, status), { context }, opts.timeoutMs);
     }
     return res;
   };

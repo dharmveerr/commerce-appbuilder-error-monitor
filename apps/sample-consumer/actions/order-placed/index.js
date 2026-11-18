@@ -22,6 +22,7 @@ async function orderPlaced(params) {
 }
 
 exports.main = withErrorMonitor(orderPlaced, {
-  source: { app: 'sample-consumer', action: 'order-placed', version: '0.1.0', environment: 'stage' }
+  source: { app: 'sample-consumer', action: 'order-placed', version: '0.1.0', environment: 'stage' },
+  timeoutMs: 5000
 });
 exports.orderPlaced = orderPlaced;

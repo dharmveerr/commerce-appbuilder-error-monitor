@@ -17,7 +17,7 @@ const DEMO_SEVERITY = {
  */
 async function syncOrders(params) {
   if (DEMO_SEVERITY[params.simulate]) {
-    const monitor = createErrorMonitor({ endpoint: params.ERROR_MONITOR_ENDPOINT, signingKey: params.ERROR_MONITOR_SIGNING_KEY, source: SOURCE });
+    const monitor = createErrorMonitor({ endpoint: params.ERROR_MONITOR_ENDPOINT, signingKey: params.ERROR_MONITOR_SIGNING_KEY, source: SOURCE, timeoutMs: 5000 });
     const result = await monitor.record(new Error(DEMO_SEVERITY[params.simulate]), { severity: params.simulate });
     return { statusCode: 200, body: { synced: 3, recordedSeverity: params.simulate, errorId: result.id } };
   }
@@ -30,6 +30,8 @@ async function syncOrders(params) {
 }
 
 exports.main = withErrorMonitor(syncOrders, {
-  source: SOURCE
+  source: SOURCE,
+  // Background action: no shopper is waiting, so allow for a cold start of record-error.
+  timeoutMs: 5000
 });
 exports.syncOrders = syncOrders;
