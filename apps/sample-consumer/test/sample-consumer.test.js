@@ -46,6 +46,21 @@ test('orders-sync: if the monitor is unreachable the action still fails cleanly 
   } finally { globalThis.fetch = realFetch; }
 });
 
+test('orders-sync: warning and critical demo modes record that severity and still return 200', async () => {
+  const sent = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => { sent.push(init); return { ok: true, status: 201, json: async () => ({ id: '20261109120000000-0123abcf' }) }; };
+  try {
+    const { main } = require('../actions/orders-sync');
+    for (const severity of ['warning', 'critical']) {
+      const res = await main({ simulate: severity, ERROR_MONITOR_ENDPOINT: 'https://m.invalid/record', ERROR_MONITOR_SIGNING_KEY: KEY });
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.body.recordedSeverity, severity);
+    }
+    assert.deepEqual(sent.map((s) => JSON.parse(s.body).severity), ['warning', 'critical']);
+  } finally { globalThis.fetch = realFetch; }
+});
+
 test('orders-sync: a returned 503 error response is recorded and returned unchanged', async () => {
   const sent = [];
   const realFetch = globalThis.fetch;
