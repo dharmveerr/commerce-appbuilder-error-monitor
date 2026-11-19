@@ -1,0 +1,66 @@
+{
+  "name": "commerce-error-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Records sanitized errors from App Builder apps and lets admins list and inspect them.",
+  "//": "Dependencies, import aliases and the postinstall hook were added by `npx @adobe/aio-commerce-lib-app init` and are committed. The postinstall hook regenerates src/*/.generated. Keep the versions the initializer chose.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "commerce:init": "npx @adobe/aio-commerce-lib-app init",
+    "build": "aio app build",
+    "deploy": "aio app build && aio app deploy",
+    "typecheck:actions": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "npm run typecheck:actions && npm run typecheck:web-src",
+    "typecheck:web-src": "tsc --noEmit -p src/commerce-backend-ui-2/web-src/tsconfig.json",
+    "postinstall": "npx aio-commerce-lib-app hooks postinstall"
+  },
+  "dependencies": {
+    "@adobe/aio-commerce-lib-admin-ui": "^1.3.0",
+    "@adobe/aio-commerce-lib-app": "^2.2.0",
+    "@adobe/aio-commerce-sdk": "^2.1.0",
+    "@adobe/aio-lib-events": "^4.0.0",
+    "@adobe/aio-lib-files": "^4.0.0",
+    "@adobe/aio-lib-state": "^4.0.0",
+    "@commerce-ext/error-monitor-sdk": "0.1.0",
+    "@react-spectrum/s2": "^1.5.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@tsconfig/bases": "^1.0.30",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "ts-loader": "^9.6.2",
+    "typescript": "^6.0.3"
+  },
+  "imports": {
+    "#app.commerce.config": "./src/commerce-extensibility-1/.generated/app.commerce.config.js",
+    "#web/*": "./src/commerce-backend-ui-2/web-src/src/*"
+  },
+  "alias": {
+    "react/jsx-dev-runtime": "./src/commerce-backend-ui-2/web-src/src/jsx-dev-runtime.js"
+  },
+  "@parcel/bundler-default": {
+    "manualSharedBundles": [
+      {
+        "assets": [
+          "**/@react-spectrum/s2/**",
+          "src/commerce-backend-ui-2/web-src/*.{js,jsx,ts,tsx}"
+        ],
+        "name": "s2-styles",
+        "types": [
+          "css"
+        ]
+      }
+    ]
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
+  }
+}
